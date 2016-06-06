@@ -51,7 +51,6 @@ class PlatformAdminServiceProvider extends ServiceProvider
             $this->initXChainMock();
 
             $this->app->bind(\Tokenly\XChainClient\Client::class, function($app) {
-                Log::debug("binding xchain client");
                 return $this->xchain_client_mock;
             });
         }

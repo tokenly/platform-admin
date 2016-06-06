@@ -4,24 +4,35 @@ namespace Tokenly\PlatformAdmin\Meta;
 
 use DB;
 use Exception;
+use Illuminate\Support\Facades\Log;
 
 class PlatformAdminMeta
 {
     static $TABLE_NAME = 'platform_admin_meta';
     
     public static function get($key, $default=null) {
-        $result = DB::table(self::$TABLE_NAME)->select('meta_value')->where('meta_key', '=', $key)->first();
-        if (!$result) { return $default; }
-        return json_decode($result->meta_value, true);
+        try {
+            $result = DB::table(self::$TABLE_NAME)->select('meta_value')->where('meta_key', '=', $key)->first();
+            if (!$result) { return $default; }
+            return json_decode($result->meta_value, true);
+        } catch (Exception $e) {
+            Log::error("PlatformAdminMeta ".get_class($e)." at ".$e->getFile().":".$e->getLine().": ".$e->getMessage()."\n".$e->getTraceAsString());
+            return null;
+        }
     }
 
     public static function getMulti($keys) {
-        $results = DB::table(self::$TABLE_NAME)->select(['meta_key','meta_value'])->whereIn('meta_key', $keys)->get();
-        $out = array_fill_keys($keys, null);
-        foreach($results as $result) {
-            $out[$result->meta_key] = json_decode($result->meta_value, true);
+        try {
+            $results = DB::table(self::$TABLE_NAME)->select(['meta_key','meta_value'])->whereIn('meta_key', $keys)->get();
+            $out = array_fill_keys($keys, null);
+            foreach($results as $result) {
+                $out[$result->meta_key] = json_decode($result->meta_value, true);
+            }
+            return $out;
+        } catch (Exception $e) {
+            Log::error("PlatformAdminMeta ".get_class($e)." at ".$e->getFile().":".$e->getLine().": ".$e->getMessage()."\n".$e->getTraceAsString());
+            return null;
         }
-        return $out;
     }
 
     public static function set($key, $value) {
