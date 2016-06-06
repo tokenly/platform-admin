@@ -84,7 +84,6 @@ class XChainBalancesController extends Controller
 
                 // update balances
                 $balances = $xchain->getBalances($address->address, true);
-                echo "\$balances: ".json_encode($balances, 192)."\n";
                 if($balances AND count($balances) > 0){
                     Address::updateAddressBalances($address->id, $balances);
                 }
