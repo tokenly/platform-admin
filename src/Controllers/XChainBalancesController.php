@@ -16,14 +16,12 @@ class XChainBalancesController extends Controller
     public function index()
     {
         return view('platformAdmin::xchain.balances.index', [
-            'xchain_balances' => PlatformAdminMeta::get('xchain_balances'),
+            'xchain_balances' => PlatformAdminMeta::get('xchain_balances', []),
         ]);
     }
 
     public function edit($id)
     {
-        PlatformAdminMeta::get('xchain_balances');
-
         return view('platformAdmin::xchain.balances.edit', [
             'balance_entry' => $this->requireBalanceByID($id),
         ]);
@@ -37,7 +35,7 @@ class XChainBalancesController extends Controller
             return $this->buildFailedValidationResponse($request, ['balances' => "Balances was invalid. Please check the JSON format"]);
         }
 
-        $xchain_balances = PlatformAdminMeta::get('xchain_balances');
+        $xchain_balances = PlatformAdminMeta::get('xchain_balances', []);
         if (!isset($xchain_balances[$id])) { throw new HttpResponseException(response('Balance not found', 404)); }
 
         $xchain_balances[$id]['balances'] = $balances;
@@ -59,7 +57,7 @@ class XChainBalancesController extends Controller
     public function destroy($id)
     {
         // delete
-        $xchain_balances = PlatformAdminMeta::get('xchain_balances');
+        $xchain_balances = PlatformAdminMeta::get('xchain_balances', []);
         if (!isset($xchain_balances[$id])) { throw new HttpResponseException(response('Balance not found', 404)); }
         unset($xchain_balances[$id]);
         PlatformAdminMeta::set('xchain_balances', $xchain_balances);
@@ -74,7 +72,7 @@ class XChainBalancesController extends Controller
     protected function refreshAllBalances() {
         // find all addresses by id
         $xchain = app('Tokenly\XChainClient\Client');
-        $xchain_balances = PlatformAdminMeta::get('xchain_balances');
+        $xchain_balances = PlatformAdminMeta::get('xchain_balances', []);
         foreach($xchain_balances as $xchain_balance) {
             Log::debug("refreshAllBalances \$xchain_balance['id']=".json_encode($xchain_balance['id'], 192));
             foreach (Address::where('xchain_address_id', $xchain_balance['id'])->get() as $address) {
@@ -92,7 +90,7 @@ class XChainBalancesController extends Controller
     }
 
     protected function requireBalanceByID($id) {
-        $all_balances = PlatformAdminMeta::get('xchain_balances');
+        $all_balances = PlatformAdminMeta::get('xchain_balances', []);
         if (!isset($all_balances[$id])) {
             throw new HttpResponseException(response('Resource not found', 404));
         }
