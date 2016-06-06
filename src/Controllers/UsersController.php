@@ -3,7 +3,6 @@
 namespace Tokenly\PlatformAdmin\Controllers;
 
 use Illuminate\Http\Request;
-use TKAccounts\Http\Requests;
 use Tokenly\LaravelApiProvider\Contracts\APIUserRepositoryContract;
 use Tokenly\PlatformAdmin\Controllers\Controller;
 

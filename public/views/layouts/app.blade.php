@@ -5,10 +5,10 @@
 @section('body')
 
 <header>
-    <div>Tokenly Platform Administration</div>
-</header>
 
-@include('platformAdmin::includes.nav')
+    @include('platformAdmin::includes.nav')
+
+</header>
 
 @yield('body_content')
 
