@@ -47,7 +47,7 @@ class PlatformAdminServiceProvider extends ServiceProvider
             return $app->make('Tokenly\PlatformAdmin\Middleware\AuthenticatePlatformAdmin');
         });
 
-        if (PlatformAdminMeta::get('xchainMockActive')) {
+        if (env('PLATFORM_ADMIN_DEVELOPMENT_MODE_ENABLED') AND PlatformAdminMeta::get('xchainMockActive')) {
             $this->initXChainMock();
 
             $this->app->bind(\Tokenly\XChainClient\Client::class, function($app) {
