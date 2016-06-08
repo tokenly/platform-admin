@@ -19,7 +19,7 @@
     "autoload": {
         "psr-4": {"Tokenly\\PlatformAdmin\\": "src/"},
         "files": [
-            "helpers/helpers.inc.php"
+            "src/helpers/helpers.inc.php"
         ]
     }
 }
