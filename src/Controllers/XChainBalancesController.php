@@ -2,6 +2,7 @@
 
 namespace Tokenly\PlatformAdmin\Controllers;
 
+use Illuminate\Http\Exception\HttpResponseException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
