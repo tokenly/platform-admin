@@ -137,4 +137,10 @@ class UsersController extends Controller
 
     // ------------------------------------------------------------------------
     
+    protected function requireModelByID($id, APIRepository $repository) {
+        $model = $repository->findById($id);
+        if (!$model) { throw new HttpResponseException(response('Resource not found', 404)); }
+        return $model;
+    }
+
 }

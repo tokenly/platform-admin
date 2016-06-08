@@ -1,5 +1,8 @@
 <?php
 
+use Illuminate\Support\Facades\Config;
+use Tokenly\PlatformAdmin\Router\Router;
+
 // the entire platform admin must enabled
 if (!env('PLATFORM_ADMIN_ENABLED', true)) { return; }
 
@@ -22,17 +25,11 @@ Route::group([
         Route::get('/xchain/balances/{id}/edit', ['as' => 'platform.admin.xchain.balances.edit', 'uses' => 'Tokenly\PlatformAdmin\Controllers\XChainBalancesController@edit']);
         Route::post('/xchain/balances/{id}', ['as' => 'platform.admin.xchain.balances.update', 'uses' => 'Tokenly\PlatformAdmin\Controllers\XChainBalancesController@update']);
         Route::delete('/xchain/balances/{id}', ['as' => 'platform.admin.xchain.balances.destroy', 'uses' => 'Tokenly\PlatformAdmin\Controllers\XChainBalancesController@destroy']);
-
-
-        // token promises
-        Route::get('/promises',           ['as' => 'platform.admin.promise.index',   'uses' => 'Tokenly\PlatformAdmin\Controllers\PromisesController@index']);
-        Route::get('/promises/{id}/edit', ['as' => 'platform.admin.promise.edit',    'uses' => 'Tokenly\PlatformAdmin\Controllers\PromisesController@edit']);
-        Route::get('/promises/new',       ['as' => 'platform.admin.promise.create',  'uses' => 'Tokenly\PlatformAdmin\Controllers\PromisesController@create']);
-        Route::post('/promises/new',      ['as' => 'platform.admin.promise.store',   'uses' => 'Tokenly\PlatformAdmin\Controllers\PromisesController@store']);
-        Route::patch('/promises/{id}',    ['as' => 'platform.admin.promise.update',  'uses' => 'Tokenly\PlatformAdmin\Controllers\PromisesController@update']);
-        Route::delete('/promises/{id}',   ['as' => 'platform.admin.promise.destroy', 'uses' => 'Tokenly\PlatformAdmin\Controllers\PromisesController@destroy']);
-
     }
+
+    // configured routes
+    $router = new Router();
+    $router->routeFromConfig(Config::get('platformadmin.routes'));
 
 });
 
