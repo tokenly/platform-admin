@@ -9,7 +9,7 @@
         <h1>XChain Balances Updated</h1>
     </div>
 
-    <p>Boom. The balances were updated.</p>
+    <p>{{ successInterjection() }} The balances were updated.</p>
 
     <p style="margin-top: 6%;">
       <a class="button" href="{{ route('platform.admin.xchain.balances.index') }}">Return to Balances</a>

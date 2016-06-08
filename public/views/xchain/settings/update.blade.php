@@ -9,7 +9,7 @@
         <h1>XChain Settings Updated</h1>
     </div>
 
-    <p>That's right. The settings were saved.</p>
+    <p>{{ successInterjection() }} The settings were saved.</p>
 
     <p style="margin-top: 6%;">
       <a class="button" href="{{ route('platform.admin.xchain') }}">Return to XChain Admin</a>

@@ -9,7 +9,7 @@
         <h1>User Updated</h1>
     </div>
 
-    <p>User {{ $model['username'] }} was updated.</p>
+    <p>{{ successInterjection() }} User {{ $model['username'] }} was updated.</p>
 
     <p>
       <a class="button" href="{{ route('platform.admin.user.index') }}">Return to Users</a>

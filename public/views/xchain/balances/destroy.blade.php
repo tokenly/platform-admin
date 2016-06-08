@@ -9,7 +9,7 @@
         <h1>XChain Balance Deleted</h1>
     </div>
 
-    <p>Buh-bye. This balance entry was deleted.</p>
+    <p>{{ goodbyeInterjection() }} This balance entry was deleted.</p>
 
     <p style="margin-top: 6%;">
       <a class="button" href="{{ route('platform.admin.xchain.balances.index') }}">Return to Balances</a>

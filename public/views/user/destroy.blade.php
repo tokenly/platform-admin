@@ -9,7 +9,7 @@
         <h1>User Deleted</h1>
     </div>
 
-    <p>This user was deleted.</p>
+    <p>{{ goodbyeInterjection() }} This user was deleted.</p>
 
     <p>
       <a class="button" href="{{ route('platform.admin.user.index') }}">Return to Users</a>
