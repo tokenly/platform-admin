@@ -27,6 +27,8 @@ function successInterjection() {
         'Yay!',
         'Yes!',
     ];
+
+    return $words[rand(0,count($words)-1)];
 }
 
 function goodbyeInterjection() {
@@ -60,5 +62,6 @@ function goodbyeInterjection() {
         'Yikes!',
     ];
 
+    return $words[rand(0,count($words)-1)];
 }
 
