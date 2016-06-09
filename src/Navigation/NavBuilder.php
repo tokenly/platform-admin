@@ -26,6 +26,13 @@ class NavBuilder
             return $this->normalizeEntry($entry);
         });
 
+        $dev_mode_enabled = env('PLATFORM_ADMIN_DEVELOPMENT_MODE_ENABLED', false);
+        if (!$dev_mode_enabled) {
+            $entries = $entries->reject(function($entry) {
+                return $entry['developmentMode'];
+            });
+        }
+
         return $entries;
     }
 
@@ -48,8 +55,9 @@ class NavBuilder
                 'label'        => 'Users',
             ],
             [
-                'route' => 'xchain',
-                'label' => 'XChain',
+                'developmentMode' => true,
+                'route'           => 'xchain',
+                'label'           => 'XChain',
             ],
         ];
 
@@ -63,6 +71,7 @@ class NavBuilder
         }
         $entry['class'] = $class;
         $entry['route'] = $this->prefixRouteName($entry['route']);
+        $entry['developmentMode'] = isset($entry['developmentMode']) ? $entry['developmentMode'] : false;
         return $entry;
     }
 
