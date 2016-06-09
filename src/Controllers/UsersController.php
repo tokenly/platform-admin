@@ -39,10 +39,11 @@ class UsersController extends Controller
     public function store(Request $request, APIUserRepositoryContract $users_repository)
     {
         $rules = [
-            'name'     => 'sometimes|max:255',
-            'username' => 'required|max:255',
-            'email'    => 'required|email|max:255',
-            'password' => 'required|max:255',
+            'name'       => 'sometimes|max:255',
+            'username'   => 'required|max:255',
+            'email'      => 'required|email|max:255',
+            'password'   => 'required|max:255',
+            'privileges' => 'sometimes|json|max:255',
         ];
 
         $request_attributes = $this->validateAndReturn($request, $rules);
@@ -99,6 +100,7 @@ class UsersController extends Controller
             'email'           => 'required|email|max:255',
             'confirmed_email' => 'sometimes|email|max:255',
             'new_password'    => 'sometimes',
+            'privileges'      => 'sometimes|json|max:255',
         ];
 
         $request_attributes = $this->validateAndReturn($request, $rules);
@@ -110,6 +112,8 @@ class UsersController extends Controller
             // this will be hashed by the repository
             $update_vars['password'] = $request_attributes['new_password'];
         }
+
+        $update_vars['privileges'] = json_decode($update_vars['privileges'], true);
 
         // update
         $users_repository->update($user, $update_vars);
@@ -137,7 +141,7 @@ class UsersController extends Controller
 
     // ------------------------------------------------------------------------
     
-    protected function requireModelByID($id, APIRepository $repository) {
+    protected function requireModelByID($id, APIUserRepositoryContract $repository) {
         $model = $repository->findById($id);
         if (!$model) { throw new HttpResponseException(response('Resource not found', 404)); }
         return $model;

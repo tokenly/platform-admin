@@ -47,6 +47,13 @@
         </div>
     </div>
 
+    <div class="row">
+        <div class="twelve columns">
+            {!! Form::label('privileges', 'Special Permissions') !!}
+            {!! Form::textarea('privileges', json_encode($model['privileges'], 192), ['class' => 'u-full-width', 'style' => 'height: 200px;']) !!}
+        </div>
+    </div>
+
 
 
     <div class="row" style="margin-top: 3%;">
