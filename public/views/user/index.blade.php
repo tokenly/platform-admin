@@ -8,7 +8,9 @@
     <div class="row">
         <h1>Users</h1>
     </div>
-
+    <p>
+        <strong># of Users:</strong> {{ number_format(count($users)) }}
+    </p>
     <div class="row">
       <table class="u-full-width">
         <thead>
