@@ -19,6 +19,7 @@
             <th>Username</th>
             <th>Email</th>
             <th>Special Privileges</th>
+            <th>Register Date</th>
             <th>Actions</th>
           </tr>
         </thead>
@@ -29,6 +30,7 @@
             <td>{{ $user['username'] }}</td>
             <td>{{ $user['email'] }}</td>
             <td><code>{{ json_encode($user['privileges'], 192) }}</code></td>
+            <td>{{ $user->created_at->format('F j\, Y \a\t g:i A') }}</td>
             <td>
               <a class="button button-primary" href="{{ route('platform.admin.user.edit', ['id' => $user['id']]) }}">Edit</a>
 
