@@ -13,7 +13,7 @@ class PlatformAdminTestHelper {
     public $url_base = '';
     public $route_prefix = '';
 
-    protected $user = null;
+    public $user = null;
 
 
     function __construct(Application $app) {
