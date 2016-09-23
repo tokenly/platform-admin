@@ -13,7 +13,10 @@ Route::group([
 ], function () {
 
     Route::get('/', ['as' => 'platform.admin.home', function () { return view('platformAdmin::home'); }]);
-    Route::resource('user', 'Tokenly\PlatformAdmin\Controllers\UsersController', []);
+
+    Route::group(['as' => 'platform.admin.'], function() {
+        Route::resource('user', 'Tokenly\PlatformAdmin\Controllers\UsersController', []);
+    });
 
     if (env('PLATFORM_ADMIN_DEVELOPMENT_MODE_ENABLED')) {
         Route::get('/xchain', ['as' => 'platform.admin.xchain', 'uses' => 'Tokenly\PlatformAdmin\Controllers\XChainController@index']);
