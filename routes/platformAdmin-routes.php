@@ -9,7 +9,7 @@ if (!env('PLATFORM_ADMIN_ENABLED', true)) { return; }
 // , 
 Route::group([
     'prefix'     => 'platform/admin',
-    'middleware' => 'platformAdmin.platformAdminAuth',
+    'middleware' => ['web', 'platformAdmin.platformAdminAuth'],
 ], function () {
 
     Route::get('/', ['as' => 'platform.admin.home', function () { return view('platformAdmin::home'); }]);
