@@ -22,7 +22,9 @@ class Router
                 $name = $this->trimRouteName($route['name']);
                 $controller = $route['controller'];
                 $options = isset($route['options']) ? $route['options'] : [];
-                Route::resource($name, $controller, $options);
+                Route::group(['as' => 'platform.admin.'], function() use ($name, $controller, $options) {
+                    Route::resource($name, $controller, $options);
+                });
             }
 
         }
