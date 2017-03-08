@@ -6,6 +6,7 @@ use Exception;
 use Illuminate\Http\Exception\HttpResponseException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
+use Tokenly\LaravelApiProvider\Filter\IndexRequestFilter;
 use Tokenly\PlatformAdmin\Controllers\Controller;
 
 abstract class ResourceController extends Controller
@@ -20,11 +21,17 @@ abstract class ResourceController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
+        $filter = null;
+        $filter_definition = $this->buildIndexRequestFilterDefinition();
+        if ($filter_definition) {
+            $filter = IndexRequestFilter::createFromRequest($request, $filter_definition);
+        }
+
         return view('platformadmin.'.$this->view_prefix.'.index', $this->modifyViewData([
-            'models' => $this->resourceRepository()->findAll(),
-        ], __FUNCTION__));
+            'models' => $this->resourceRepository()->findAll($filter),
+        ], __FUNCTION__, ['filter' => $filter]));
     }
 
     /**
@@ -118,23 +125,26 @@ abstract class ResourceController extends Controller
     // ------------------------------------------------------------------------
     // override view variables
 
-    protected function modifyViewData($view_data, $method_name) {
+    protected function modifyViewData($view_data, $method_name, $meta=null) {
         $method_name = "modifyViewData_{$method_name}";
         if (method_exists($this, $method_name)) {
-            return call_user_func([$this, $method_name], $view_data);
+            return call_user_func([$this, $method_name], $view_data, $meta);
         }
         return $view_data;
     }
 
 /*
-    protected function modifyViewData_index($view_data) { }
-    protected function modifyViewData_create($view_data) { }
-    protected function modifyViewData_store($view_data) { }
-    protected function modifyViewData_edit($view_data) { }
-    protected function modifyViewData_update($view_data) { }
-    protected function modifyViewData_delete($view_data) { }
+    protected function modifyViewData_index($view_data, $meta=null) { }
+    protected function modifyViewData_create($view_data, $meta=null) { }
+    protected function modifyViewData_store($view_data, $meta=null) { }
+    protected function modifyViewData_edit($view_data, $meta=null) { }
+    protected function modifyViewData_update($view_data, $meta=null) { }
+    protected function modifyViewData_delete($view_data, $meta=null) { }
 */
 
+    protected function buildIndexRequestFilterDefinition() {
+        return null;
+    }
 
     // ------------------------------------------------------------------------
     // override create/update vars
@@ -163,6 +173,29 @@ abstract class ResourceController extends Controller
         if (!$model) { throw new HttpResponseException(response('Resource not found', 404)); }
         return $model;
     }
+
+
+    protected function addPaginationDataToViewData($view_data, $meta) {
+        if ($meta AND isset($meta['filter'])) {
+            $view_data['pagination'] = $this->buildPaginationData($meta['filter']);
+        }
+        return $view_data;
+    }
+
+
+    protected function buildPaginationData(IndexRequestFilter $filter) {
+        $total_count = $filter->query->toBase()->getCountForPagination();
+
+        return [
+            'count'          => $total_count,
+            'count_per_page' => $filter->used_limit,
+            'offset'         => $filter->used_page_offset,
+            'pages_count'    => ceil($total_count / $filter->used_limit),
+        ];
+
+        
+    }
+
 
 
 }

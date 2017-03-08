@@ -4,6 +4,8 @@
 
 @section('body_content')
 
+@include('platformAdmin::includes.status')
+
 <div class="container" style="margin-top: 3%">
     <div class="row">
         <h1>Users</h1>

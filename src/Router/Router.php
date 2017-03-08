@@ -10,6 +10,7 @@ class Router
 {
 
     public function routeFromConfig($routes) {
+        if (!$routes) { return; }
         $dev_mode_enabled = env('PLATFORM_ADMIN_DEVELOPMENT_MODE_ENABLED', false);
 
         foreach($routes as $route) {
