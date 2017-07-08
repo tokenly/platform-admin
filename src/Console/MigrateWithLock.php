@@ -35,7 +35,7 @@ class MigrateWithLock extends Command {
     {
         $lock = app(RecordLock::class);
         $lock->acquireAndExecute('migrate', function() {
-            $this->call('migrate', ['--force']);
+            $this->call('migrate', ['--force' => true]);
         });
 
     }
