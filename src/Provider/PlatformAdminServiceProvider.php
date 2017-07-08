@@ -43,9 +43,16 @@ class PlatformAdminServiceProvider extends ServiceProvider
      */
     public function register()
     {
+        $configPath = __DIR__ . '/../../config/platformadmin.php';
+        $this->mergeConfigFrom($configPath, 'platformadmin');
+
         $this->app->bind('platformAdmin.platformAdminAuth', function($app) {
             return $app->make('Tokenly\PlatformAdmin\Middleware\AuthenticatePlatformAdmin');
         });
+        $this->app->bind('platformAdmin.controlAuth', function($app) {
+            return $app->make('Tokenly\PlatformAdmin\Middleware\AuthenticatePlatformControl');
+        });
+
 
         if (env('PLATFORM_ADMIN_DEVELOPMENT_MODE_ENABLED') AND PlatformAdminMeta::get('xchainMockActive')) {
             $this->initXChainMock();
@@ -54,6 +61,13 @@ class PlatformAdminServiceProvider extends ServiceProvider
                 return $this->xchain_client_mock;
             });
         }
+
+        $this->commands([
+            \Tokenly\PlatformAdmin\Console\CreatePlatformAdmin::class,
+            \Tokenly\PlatformAdmin\Console\MigrateWithLock::class,
+            \Tokenly\PlatformAdmin\Console\SetServiceHealthStatus::class,
+        ]);
+
     }
 
     // ------------------------------------------------------------------------
