@@ -21,7 +21,6 @@ class PlatformHealthCheckController extends Controller
         $should_check_db = Config::get('platformadmin.healthcheck.checkDatabase');
         try {
             if ($should_check_db) {
-                Log::debug("DB::connection()->getPdo()=".json_encode(DB::connection()->getPdo(), 192));
                 if (!DB::connection()->getPdo()) {
                     $errors[] = "failed to connect to database";
                     $all_checks_pass = false;
