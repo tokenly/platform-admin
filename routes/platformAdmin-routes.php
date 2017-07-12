@@ -48,3 +48,8 @@ if (env('PLATFORM_CONTROL_ENABLED', true)) {
 
     });
 }
+
+// the entire platform admin must enabled
+if (env('PLATFORM_HEALTH_CHECK_ENABLED', true)) {
+    Route::get('/_health', ['as' => 'platform.control.healthcheck', 'uses' => 'Tokenly\PlatformAdmin\Controllers\PlatformHealthCheckController@healthcheck']);
+}

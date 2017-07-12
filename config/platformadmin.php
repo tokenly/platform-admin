@@ -9,4 +9,7 @@ return [
         'authBasicUsername' => env('PLATFORM_CONTROL_AUTH_USERNAME', 'tkadmin'),
         'authBasicPassword' => env('PLATFORM_CONTROL_AUTH_PASSWORD', null),
     ],
+    'healthcheck' => [
+        'checkDatabase'   => env('PLATFORM_HEALTH_CHECK_DB', true),
+    ],
 ];
