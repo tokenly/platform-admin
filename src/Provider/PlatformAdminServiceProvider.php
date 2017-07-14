@@ -66,6 +66,7 @@ class PlatformAdminServiceProvider extends ServiceProvider
             \Tokenly\PlatformAdmin\Console\CreatePlatformAdmin::class,
             \Tokenly\PlatformAdmin\Console\MigrateWithLock::class,
             \Tokenly\PlatformAdmin\Console\SetServiceHealthStatus::class,
+            \Tokenly\PlatformAdmin\Console\ServiceCheck::class,
         ]);
 
     }
