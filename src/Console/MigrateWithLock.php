@@ -5,6 +5,7 @@ namespace Tokenly\PlatformAdmin\Console;
 use Exception;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Log;
+use Symfony\Component\Console\Input\InputOption;
 use Tokenly\LaravelEventLog\Facade\EventLog;
 use Tokenly\RecordLock\RecordLock;
 
@@ -34,10 +35,22 @@ class MigrateWithLock extends Command {
     public function fire()
     {
         $lock = app(RecordLock::class);
+
         $lock->acquireAndExecute('migrate', function() {
-            $this->call('migrate', ['--force' => true]);
+            $args = ['--force' => true];
+            if ($this->input->hasOption('path') && $this->option('path')) {
+                $args = ['--path' => $this->option('path')];
+            }
+            $this->call('migrate', $args);
         });
 
+    }
+
+    protected function getOptions()
+    {
+        return [
+            ['path', null, InputOption::VALUE_OPTIONAL, 'The path of migrations files to be executed.'],
+        ];
     }
 
  }
