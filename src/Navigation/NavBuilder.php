@@ -55,6 +55,11 @@ class NavBuilder
                 'label'        => 'Users',
             ],
             [
+                'route'        => 'artisan.command',
+                'activePrefix' => 'artisan',
+                'label'        => 'Command',
+            ],
+            [
                 'developmentMode' => true,
                 'route'           => 'xchain',
                 'label'           => 'XChain',

@@ -28,6 +28,11 @@ if (env('PLATFORM_ADMIN_ENABLED', true)) {
             Route::delete('/xchain/balances/{id}', ['as' => 'platform.admin.xchain.balances.destroy', 'uses' => 'Tokenly\PlatformAdmin\Controllers\XChainBalancesController@destroy']);
         }
 
+        // artisan command
+        Route::get('/artisan/command', ['as' => 'platform.admin.artisan.command', 'uses' => 'Tokenly\PlatformAdmin\Controllers\ArtisanCommandController@showForm']);
+        Route::post('/artisan/command', ['as' => 'platform.admin.artisan.command', 'uses' => 'Tokenly\PlatformAdmin\Controllers\ArtisanCommandController@runCommand']);
+
+
         // configured routes
         $router = new Router();
         $router->routeFromConfig(Config::get('platformadmin.routes'));
