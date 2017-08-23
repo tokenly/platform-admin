@@ -39,7 +39,7 @@ class MigrateWithLock extends Command {
         $lock->acquireAndExecute('migrate', function() {
             $args = ['--force' => true];
             if ($this->input->hasOption('path') && $this->option('path')) {
-                $args = ['--path' => $this->option('path')];
+                $args = array_merge($args, ['--path' => $this->option('path')]);
             }
             $this->call('migrate', $args);
         });
