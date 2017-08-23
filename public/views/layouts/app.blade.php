@@ -1,6 +1,6 @@
 @extends('platformAdmin::layouts.base')
 
-@section('htmltitle')Platform Admin |@yield('title_name', 'Admin')@endsection
+@section('htmltitle')@yield('title_name', 'Admin') | Platform Admin @endsection
 
 @section('body')
 

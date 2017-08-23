@@ -5,8 +5,10 @@ namespace Tokenly\PlatformAdmin\Controllers;
 use Exception;
 use Illuminate\Http\Exception\HttpResponseException;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
 use Tokenly\LaravelApiProvider\Filter\IndexRequestFilter;
+use Tokenly\LaravelEventLog\Facade\EventLog;
 use Tokenly\PlatformAdmin\Controllers\Controller;
 
 abstract class ResourceController extends Controller
@@ -30,7 +32,8 @@ abstract class ResourceController extends Controller
         }
 
         return view('platformadmin.'.$this->view_prefix.'.index', $this->modifyViewData([
-            'models' => $this->resourceRepository()->findAll($filter),
+            'view_prefix' => $this->view_prefix,
+            'models'      => $this->resourceRepository()->findAll($filter),
         ], __FUNCTION__, ['filter' => $filter]));
     }
 
@@ -43,7 +46,8 @@ abstract class ResourceController extends Controller
     {
         $empty_model = array_fill_keys(array_keys($this->getValidationRules()), '');
         return view('platformadmin.'.$this->view_prefix.'.create', $this->modifyViewData([
-            'model' => $empty_model
+            'view_prefix' => $this->view_prefix,
+            'model'       => $empty_model,
         ], __FUNCTION__));
     }
 
@@ -65,12 +69,15 @@ abstract class ResourceController extends Controller
             return $this->buildFailedValidationResponse($request, ['model' => "Failed to create model."]);
         }
 
-        return view('platformadmin.'.$this->view_prefix.'.store', $this->modifyViewData(['model' => $model], __FUNCTION__));
+        EventLog::debug('platformadmin.modelCreated', ['userId' => Auth::id(), 'modelType' => (new \ReflectionClass($model))->getShortName(), 'modelId' => $model['id'],]);
+
+        return view('platformadmin.'.$this->view_prefix.'.store', $this->modifyViewData(['view_prefix' => $this->view_prefix, 'model' => $model], __FUNCTION__));
     }
 
     public function edit($id)
     {
         return view('platformadmin.'.$this->view_prefix.'.edit', $this->modifyViewData([
+            'view_prefix' => $this->view_prefix,
             'model' => $this->requireModelByID($id),
         ], __FUNCTION__));
     }
@@ -94,7 +101,9 @@ abstract class ResourceController extends Controller
         // update
         $this->resourceRepository()->update($model, $update_vars);
 
-        return view('platformadmin.'.$this->view_prefix.'.update', $this->modifyViewData(['model' => $model], __FUNCTION__));
+        EventLog::debug('platformadmin.modelUpdated', ['userId' => Auth::id(), 'modelType' => (new \ReflectionClass($model))->getShortName(), 'modelId' => $model['id'], 'keys' => implode(',', array_keys($update_vars))]);
+
+        return view('platformadmin.'.$this->view_prefix.'.update', $this->modifyViewData(['view_prefix' => $this->view_prefix, 'model' => $model], __FUNCTION__));
     }
 
     /**
@@ -107,9 +116,9 @@ abstract class ResourceController extends Controller
     {
         // delete
         $model = $this->requireModelByID($id);
-
-        // refresh all balance
         $this->resourceRepository()->delete($model);
+
+        EventLog::debug('platformadmin.modelDestroyed', ['userId' => Auth::id(), 'modelType' => (new \ReflectionClass($model))->getShortName(), 'modelId' => $id,]);
 
         return view('platformadmin.'.$this->view_prefix.'.destroy', $this->modifyViewData([], __FUNCTION__));
     }
