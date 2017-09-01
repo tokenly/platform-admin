@@ -10,6 +10,7 @@ use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Log;
 use Tokenly\HmacAuth\Exception\AuthorizationException;
+use Tokenly\LaravelApiProvider\Contracts\APIPermissionedUserContract;
 use Tokenly\LaravelApiProvider\Contracts\APIUserRepositoryContract;
 use Tokenly\LaravelEventLog\Facade\EventLog;
 
@@ -45,7 +46,9 @@ class AuthenticatePlatformAdmin {
                 return redirect('/');
             }
 
-            $authenticated = $user->hasPermission('platformAdmin');
+            if ($user instanceof APIPermissionedUserContract) {
+                $authenticated = $user->hasPermission('platformAdmin');
+            }
 
         } catch (Exception $e) {
             // something else went wrong

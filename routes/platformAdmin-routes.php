@@ -48,9 +48,12 @@ if (env('PLATFORM_CONTROL_ENABLED', true)) {
         'prefix'     => 'platform/control',
         'middleware' => ['web', 'platformAdmin.controlAuth'],
     ], function () {
-
         Route::get('/version', ['as' => 'platform.control.version', 'uses' => 'Tokenly\PlatformAdmin\Controllers\PlatformControlController@version']);
 
+        if (env('PLATFORM_CONTROL_PROMOTE_ADMIN_ENABLED', false)) {
+            Route::get('/promote-platform-admin', ['as' => 'platform.control.promoteadmin', 'uses' => 'Tokenly\PlatformAdmin\Controllers\PlatformControlController@promotePlatformAdmin']);
+            Route::get('/demote-platform-admin', ['as' => 'platform.control.demoteadmin', 'uses' => 'Tokenly\PlatformAdmin\Controllers\PlatformControlController@demotePlatformAdmin']);
+        }
     });
 }
 
