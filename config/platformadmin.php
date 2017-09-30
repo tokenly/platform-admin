@@ -1,7 +1,16 @@
 <?php
 
 return [
-    'routes' => [
+    'navigation' => [
+        // [
+        //     'route'        => 'albums.index', // you can override defaults by route name such as 'user.index'
+        //     'activePrefix' => 'albums',
+        //     'label'        => 'Albums',
+        // ],
+        // [
+        //     'route'    => 'user.index', // you can override defaults by route name such as 'user.index'
+        //     'disabled' => true,
+        // ],
     ],
     'control' => [
         'versionFilepath'   => env('PLATFORM_CONTROL_VERSION_FILEPATH', '/app/version'),

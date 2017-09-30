@@ -19,7 +19,18 @@ class NavBuilder
 
         // merge config
         $config_nav_entries = Config::get('platformadmin.navigation');
-        if ($config_nav_entries) { $entries = $entries->merge($config_nav_entries); }
+        if ($config_nav_entries) {
+
+            // replace any averrides
+            $replaced_entry_names = array_fill_keys(array_column($config_nav_entries, 'route'), true);
+            $entries = $entries->reject(function($entry) use ($replaced_entry_names) {
+                return isset($replaced_entry_names[$entry['route']]);
+            });
+
+            $entries = $entries->merge($config_nav_entries)->reject(function($entry) {
+                return isset($entry['disabled']) AND $entry['disabled'];
+            });
+        }
 
         // normalize
         $entries = $entries->map(function($entry) {

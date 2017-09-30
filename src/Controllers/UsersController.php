@@ -15,7 +15,7 @@ class UsersController extends Controller
      */
     public function index(APIUserRepositoryContract $users_repository)
     {
-        return view('platformAdmin::user.index', [
+        return view($this->view_base.'user.index', [
             'users' => $users_repository->findAll(),
         ]);
     }
@@ -27,7 +27,7 @@ class UsersController extends Controller
      */
     public function create()
     {
-        return view('platformAdmin::user.create', []);
+        return view($this->view_base.'user.create', []);
     }
 
     /**
@@ -38,20 +38,13 @@ class UsersController extends Controller
      */
     public function store(Request $request, APIUserRepositoryContract $users_repository)
     {
-        $rules = [
-            'name'       => 'sometimes|max:255',
-            'username'   => 'required|max:255',
-            'email'      => 'required|email|max:255',
-            'password'   => 'required|max:255',
-            'privileges' => 'sometimes|json|max:255',
-        ];
+        $rules = $this->createValidationRules();
 
         $request_attributes = $this->validateAndReturn($request, $rules);
         $create_vars = $request_attributes;
-
         $user = $users_repository->create($create_vars);
 
-        return view('platformAdmin::user.store', [
+        return view($this->view_base.'user.store', [
             'model' => $user,
         ]);
 
@@ -78,7 +71,8 @@ class UsersController extends Controller
     {
         $user = $this->requireModelByID($id, $users_repository);
 
-        return view('platformAdmin::user.edit', [
+        \Illuminate\Support\Facades\Log::debug("\$this->view_base=".json_encode($this->view_base, 192));
+        return view($this->view_base.'user.edit', [
             'model' => $user,
         ]);
     }
@@ -94,14 +88,7 @@ class UsersController extends Controller
     {
         $user = $this->requireModelByID($id, $users_repository);
 
-        $rules = [
-            'name'            => 'sometimes|max:255',
-            'username'        => 'required|max:255',
-            'email'           => 'required|email|max:255',
-            'confirmed_email' => 'sometimes|email|max:255',
-            'new_password'    => 'sometimes',
-            'privileges'      => 'sometimes|json|max:255',
-        ];
+        $rules = $this->updateValidationRules();
 
         $request_attributes = $this->validateAndReturn($request, $rules);
         $update_vars = $request_attributes;
@@ -115,10 +102,15 @@ class UsersController extends Controller
 
         $update_vars['privileges'] = json_decode($update_vars['privileges'], true);
 
+        // make confirmed_email null if blank
+        if (isset($update_vars['confirmed_email']) AND !strlen($update_vars['confirmed_email'])) {
+            unset($update_vars['confirmed_email']);
+        }
+
         // update
         $users_repository->update($user, $update_vars);
 
-        return view('platformAdmin::user.update', [
+        return view($this->view_base.'user.update', [
             'model' => $user,
         ]);
     }
@@ -136,7 +128,7 @@ class UsersController extends Controller
         // delete
         $users_repository->delete($user);
 
-        return view('platformAdmin::user.destroy', []);
+        return view($this->view_base.'user.destroy', []);
     }
 
     // ------------------------------------------------------------------------
@@ -145,6 +137,27 @@ class UsersController extends Controller
         $model = $repository->findById($id);
         if (!$model) { throw new HttpResponseException(response('Resource not found', 404)); }
         return $model;
+    }
+
+    protected function createValidationRules() {
+        return [
+            'name'       => 'sometimes|max:255',
+            'username'   => 'required|max:255',
+            'email'      => 'required|email|max:255',
+            'password'   => 'required|max:255',
+            'privileges' => 'sometimes|json|max:255',
+        ];
+    }
+
+    protected function updateValidationRules() {
+        return [
+            'name'            => 'sometimes|max:255',
+            'username'        => 'required|max:255',
+            'email'           => 'required|email|max:255',
+            'confirmed_email' => 'sometimes|email|max:255',
+            'new_password'    => 'sometimes',
+            'privileges'      => 'sometimes|json|max:255',
+        ];
     }
 
 }

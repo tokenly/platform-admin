@@ -11,6 +11,7 @@ abstract class Controller extends BaseController
 {
     use DispatchesJobs, ValidatesRequests;
 
+    protected $view_base = 'platformAdmin::';
 
     // ------------------------------------------------------------------------
     
@@ -18,6 +19,22 @@ abstract class Controller extends BaseController
     protected function validateAndReturn(Request $request, $rules) {
         $this->validate($request, $rules);
         return $request->only(array_keys($rules));
+    }
+
+
+    // ------------------------------------------------------------------------
+    // validation rules
+
+    protected function createValidationRules() {
+        return $this->sharedCreateAndUpdateValidationRules();
+    }
+
+    protected function updateValidationRules() {
+        return $this->sharedCreateAndUpdateValidationRules();
+    }
+
+    protected function sharedCreateAndUpdateValidationRules() {
+        return [];
     }
 
 }
