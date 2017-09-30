@@ -11,8 +11,6 @@ abstract class Controller extends BaseController
 {
     use DispatchesJobs, ValidatesRequests;
 
-    protected $view_base = 'platformAdmin::';
-
     // ------------------------------------------------------------------------
     
 
