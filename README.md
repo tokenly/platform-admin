@@ -19,6 +19,12 @@ A platform administration module for Tokenly services using the Laravel applicat
 - visit `https://mysite.com/platform/control/promote-platform-admin?email=leroyjenkins@email.com` to make user leroyjenkins a platform admin
 - set `PLATFORM_CONTROL_PROMOTE_ADMIN_ENABLED=0` in your `.env` file
 
+## Promote an admin
+
+- set `PLATFORM_CONTROL_PROMOTE_ADMIN_ENABLED` to `1` in your `.env` file
+- visit `https://mysite.com/platform/control/promote-platform-admin?user=leroyjenkins` to make user leroyjenkins a platform admin
+- set `PLATFORM_CONTROL_PROMOTE_ADMIN_ENABLED` to `0` in your `.env` file
+
 ## Usage
 
 Create or modify a user to have the platformAdmin privilege
