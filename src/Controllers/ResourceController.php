@@ -14,9 +14,10 @@ use Tokenly\PlatformAdmin\Controllers\Controller;
 abstract class ResourceController extends Controller
 {
 
-    protected $view_prefix      = null; // 'viewname';
-    protected $repository_class = null; // 'App\Repositories\MyRepository';
+    protected $view_prefix      = null; // 'viewname' or 'platformAdmin::'
+    protected $repository_class = null; // 'App\Repositories\MyRepository'
 
+    protected $add_pagination_data = false;
 
     /**
      * Display a listing of the resource.
@@ -31,9 +32,10 @@ abstract class ResourceController extends Controller
             $filter = IndexRequestFilter::createFromRequest($request, $filter_definition);
         }
 
-        return view('platformadmin.'.$this->view_prefix.'.index', $this->modifyViewData([
-            'view_prefix' => $this->view_prefix,
-            'models'      => $this->resourceRepository()->findAll($filter),
+        $resolved_view_prefix = $this->resolveViewPrefix($this->view_prefix);
+        return view($resolved_view_prefix.'.index', $this->modifyViewData([
+            'view_prefix'  => $resolved_view_prefix,
+            'models'       => $this->resourceRepository()->findAll($filter),
         ], __FUNCTION__, ['filter' => $filter]));
     }
 
@@ -44,9 +46,10 @@ abstract class ResourceController extends Controller
      */
     public function create()
     {
-        $empty_model = array_fill_keys(array_keys($this->getValidationRules()), '');
-        return view('platformadmin.'.$this->view_prefix.'.create', $this->modifyViewData([
-            'view_prefix' => $this->view_prefix,
+        $empty_model = array_fill_keys(array_keys($this->createValidationRules()), '');
+        $resolved_view_prefix = $this->resolveViewPrefix($this->view_prefix);
+        return view($resolved_view_prefix.'.create', $this->modifyViewData([
+            'view_prefix' => $resolved_view_prefix,
             'model'       => $empty_model,
         ], __FUNCTION__));
     }
@@ -59,7 +62,7 @@ abstract class ResourceController extends Controller
      */
     public function store(Request $request)
     {
-        $request_attributes = $this->validateAndReturn($request, $this->getValidationRules());
+        $request_attributes = $this->validateAndReturn($request, $this->createValidationRules());
 
         // modify
         $create_vars = $this->modifyVarsBeforeCreate($request_attributes);
@@ -71,13 +74,15 @@ abstract class ResourceController extends Controller
 
         EventLog::debug('platformadmin.modelCreated', ['userId' => Auth::id(), 'modelType' => (new \ReflectionClass($model))->getShortName(), 'modelId' => $model['id'],]);
 
-        return view('platformadmin.'.$this->view_prefix.'.store', $this->modifyViewData(['view_prefix' => $this->view_prefix, 'model' => $model], __FUNCTION__));
+        $resolved_view_prefix = $this->resolveViewPrefix($this->view_prefix);
+        return view($resolved_view_prefix.'.store', $this->modifyViewData(['view_prefix' => $resolved_view_prefix, 'model' => $model], __FUNCTION__));
     }
 
     public function edit($id)
     {
-        return view('platformadmin.'.$this->view_prefix.'.edit', $this->modifyViewData([
-            'view_prefix' => $this->view_prefix,
+        $resolved_view_prefix = $this->resolveViewPrefix($this->view_prefix);
+        return view($resolved_view_prefix.'.edit', $this->modifyViewData([
+            'view_prefix' => $resolved_view_prefix,
             'model' => $this->requireModelByID($id),
         ], __FUNCTION__));
     }
@@ -93,7 +98,7 @@ abstract class ResourceController extends Controller
     {
         $model = $this->requireModelByID($id);
 
-        $request_attributes = $this->validateAndReturn($request, $this->getValidationRules());
+        $request_attributes = $this->validateAndReturn($request, $this->updateValidationRules());
 
         // modify
         $update_vars = $this->modifyVarsBeforeUpdate($request_attributes);
@@ -103,7 +108,8 @@ abstract class ResourceController extends Controller
 
         EventLog::debug('platformadmin.modelUpdated', ['userId' => Auth::id(), 'modelType' => (new \ReflectionClass($model))->getShortName(), 'modelId' => $model['id'], 'keys' => implode(',', array_keys($update_vars))]);
 
-        return view('platformadmin.'.$this->view_prefix.'.update', $this->modifyViewData(['view_prefix' => $this->view_prefix, 'model' => $model], __FUNCTION__));
+        $resolved_view_prefix = $this->resolveViewPrefix($this->view_prefix);
+        return view($resolved_view_prefix.'.update', $this->modifyViewData(['view_prefix' => $resolved_view_prefix, 'model' => $model], __FUNCTION__));
     }
 
     /**
@@ -120,21 +126,29 @@ abstract class ResourceController extends Controller
 
         EventLog::debug('platformadmin.modelDestroyed', ['userId' => Auth::id(), 'modelType' => (new \ReflectionClass($model))->getShortName(), 'modelId' => $id,]);
 
-        return view('platformadmin.'.$this->view_prefix.'.destroy', $this->modifyViewData([], __FUNCTION__));
+        $resolved_view_prefix = $this->resolveViewPrefix($this->view_prefix);
+        return view($resolved_view_prefix.'.destroy', $this->modifyViewData([], __FUNCTION__));
     }
 
     // ------------------------------------------------------------------------
     // override validation rules
 
     protected function createValidationRules() { return $this->getValidationRules(); }
-    protected function editValidationRules() { return $this->getValidationRules(); }
-    abstract protected function getValidationRules();
+    protected function updateValidationRules() { return $this->getValidationRules(); }
+    protected function getValidationRules() {
+        return [];
+    }
 
 
     // ------------------------------------------------------------------------
     // override view variables
 
     protected function modifyViewData($view_data, $method_name, $meta=null) {
+        // add pagination for index
+        if ($method_name == 'index' AND $this->add_pagination_data) {
+            $view_data = $this->addPaginationDataToViewData($view_data, $meta);
+        }
+
         $method_name = "modifyViewData_{$method_name}";
         if (method_exists($this, $method_name)) {
             return call_user_func([$this, $method_name], $view_data, $meta);
@@ -170,6 +184,21 @@ abstract class ResourceController extends Controller
 
     // ------------------------------------------------------------------------
 
+    protected function resolveViewPrefix($view_prefix) {
+        if (strpos($view_prefix, '::') !== false) {
+            return $view_prefix;
+        }
+        return 'platformadmin.'.$view_prefix;
+    }
+
+    protected function resolveRoutePrefix($view_prefix) {
+        $str_pos = strpos($view_prefix, '::');
+        if ($str_pos !== false) {
+            return 'platform.admin.'.substr($view_prefix, $str_pos + 2);
+        }
+        return 'platform.admin.'.$view_prefix;
+    }
+
     protected function resourceRepository() {
         if (!isset($this->resource_repository)) {
             $this->resource_repository = app($this->repository_class);
@@ -200,6 +229,7 @@ abstract class ResourceController extends Controller
             'count_per_page' => $filter->used_limit,
             'offset'         => $filter->used_page_offset,
             'pages_count'    => ceil($total_count / $filter->used_limit),
+            'route_prefix'   => $this->resolveRoutePrefix($this->view_prefix),
         ];
 
         

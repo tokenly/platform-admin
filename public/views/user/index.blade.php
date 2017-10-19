@@ -10,8 +10,11 @@
     <div class="row">
         <h1>Users</h1>
     </div>
+
+    @include('platformAdmin::includes.user-filter')
+
     <p>
-        <strong># of Users:</strong> {{ number_format(count($users)) }}
+        <strong># of Users:</strong> {{ number_format(count($models)) }}
     </p>
     <div class="row">
       <table class="u-full-width">
@@ -26,18 +29,18 @@
           </tr>
         </thead>
         <tbody>
-          @foreach ($users as $user)
+          @foreach ($models as $model)
           <tr>
-            <td>{{ $user['name'] }}</td>
-            <td>{{ $user['username'] }}</td>
-            <td>{{ $user['email'] }}</td>
-            <td><code>{{ json_encode($user['privileges'], 192) }}</code></td>
-            <td>{{ $user->created_at->format('F j\, Y \a\t g:i A') }}</td>
+            <td>{{ $model['name'] }}</td>
+            <td>{{ $model['username'] }}</td>
+            <td>{{ $model['email'] }}</td>
+            <td><code>{{ json_encode($model['privileges'], 192) }}</code></td>
+            <td>{{ $model->created_at->format('F j\, Y \a\t g:i A') }}</td>
             <td>
-              <a class="button button-primary" href="{{ route('platform.admin.user.edit', ['id' => $user['id']]) }}">Edit</a>
+              <a class="button button-primary" href="{{ route('platform.admin.user.edit', ['id' => $model['id']]) }}">Edit</a>
 
               {{-- inline delete form --}}
-              <form onsubmit="return confirm('Are you sure you want to delete this user?')" action="{{ route('platform.admin.user.destroy', ['id' => $user['id']]) }}" method="POST" style="margin-bottom: 0; display: inline;">
+              <form onsubmit="return confirm('Are you sure you want to delete this user?')" action="{{ route('platform.admin.user.destroy', ['id' => $model['id']]) }}" method="POST" style="margin-bottom: 0; display: inline;">
               <input type="hidden" name="_method" value="DELETE">
                 <button type="submit" class="button-primary">Delete</button>
               </form>
@@ -52,6 +55,8 @@
     <div class="row">
       <a class="button button-primary" href="{{ route('platform.admin.user.create') }}">Add a New User</a>
     </div>
+
+    @include('platformAdmin::includes.pagination')
 </div>
 
 @endsection
