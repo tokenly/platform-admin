@@ -35,4 +35,16 @@ abstract class Controller extends BaseController
         return [];
     }
 
+
+    protected function buildFailedValidationResponse(Request $request, array $errors)
+    {
+        if ($request->expectsJson()) {
+            return new JsonResponse($errors, 422);
+        }
+
+        return redirect()->back()
+                        ->withInput($request->input())
+                        ->withErrors($errors);
+    }
+
 }

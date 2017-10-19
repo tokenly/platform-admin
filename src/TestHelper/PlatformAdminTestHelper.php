@@ -6,7 +6,7 @@ use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
-use \PHPUnit_Framework_Assert as PHPUnit;
+use PHPUnit\Framework\Assert as PHPUnit;
 
 class PlatformAdminTestHelper {
 
