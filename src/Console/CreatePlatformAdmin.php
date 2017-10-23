@@ -69,7 +69,7 @@ class CreatePlatformAdmin extends Command {
      *
      * @return mixed
      */
-    public function fire()
+    public function handle()
     {
         $user_repository = app('Tokenly\LaravelApiProvider\Contracts\APIUserRepositoryContract');
         Log::debug("\$user_repository is ".get_class($user_repository));

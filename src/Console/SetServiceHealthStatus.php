@@ -33,7 +33,7 @@ class SetServiceHealthStatus extends Command {
      *
      * @return void
      */
-    public function fire()
+    public function handle()
     {
         $health_filepath = Config::get('platformadmin.control.healthFilepath');
         switch (strtolower($this->argument('status'))) {

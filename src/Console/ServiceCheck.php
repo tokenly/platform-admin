@@ -35,7 +35,7 @@ class ServiceCheck extends Command {
      *
      * @return void
      */
-    public function fire(ServicesChecker $services_checker)
+    public function handle(ServicesChecker $services_checker)
     {
 
         $config_string = $this->argument('config');
