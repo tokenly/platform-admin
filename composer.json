@@ -22,5 +22,12 @@
         "files": [
             "src/helpers/helpers.inc.php"
         ]
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "Tokenly\\PlatformAdmin\\Provider\\PlatformAdminServiceProvider"
+            ]
+        }
     }
 }
