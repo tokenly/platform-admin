@@ -54,14 +54,6 @@ class PlatformAdminServiceProvider extends ServiceProvider
         });
 
 
-        if (env('PLATFORM_ADMIN_DEVELOPMENT_MODE_ENABLED') AND PlatformAdminMeta::get('xchainMockActive')) {
-            $this->initXChainMock();
-
-            $this->app->bind(\Tokenly\XChainClient\Client::class, function($app) {
-                return $this->xchain_client_mock;
-            });
-        }
-
         $this->commands([
             \Tokenly\PlatformAdmin\Console\CreatePlatformAdmin::class,
             \Tokenly\PlatformAdmin\Console\MigrateWithLock::class,
@@ -76,18 +68,5 @@ class PlatformAdminServiceProvider extends ServiceProvider
     protected function moduleDir($ext=null) {
         if (!isset($this->base_dir)) { $this->base_dir = realpath(__DIR__.'/../..'); }
         return $this->base_dir.($ext === null ? '' : '/'.$ext);
-    }
-
-    protected function initXChainMock() {
-        if (!isset($this->xchain_client_mock)) {
-            // build the mock
-            $builder = app('Tokenly\XChainClient\Mock\MockBuilder');
-            list($xchain_client_mock, $xchain_recorder) = $builder->buildXChainMockAndRecorder();
-            $this->xchain_client_mock = $xchain_client_mock;
-
-            // bind the events
-            $xchain_hooks_manager = app('Tokenly\PlatformAdmin\XChainHooks\XChainHooksManager')->init($builder);
-        }
-        return $this->xchain_client_mock;
     }
 }

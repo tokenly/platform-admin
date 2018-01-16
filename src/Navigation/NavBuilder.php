@@ -70,11 +70,6 @@ class NavBuilder
                 'activePrefix' => 'artisan',
                 'label'        => 'Command',
             ],
-            [
-                'developmentMode' => true,
-                'route'           => 'xchain',
-                'label'           => 'XChain',
-            ],
         ];
 
     }

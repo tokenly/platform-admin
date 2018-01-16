@@ -16,18 +16,6 @@ if (env('PLATFORM_ADMIN_ENABLED', true)) {
             Route::resource('user', 'Tokenly\PlatformAdmin\Controllers\UsersController', []);
         });
 
-        if (env('PLATFORM_ADMIN_DEVELOPMENT_MODE_ENABLED')) {
-            Route::get('/xchain', ['as' => 'platform.admin.xchain', 'uses' => 'Tokenly\PlatformAdmin\Controllers\XChainController@index']);
-
-            Route::get('/xchain/settings', ['as' => 'platform.admin.xchain.settings', 'uses' => 'Tokenly\PlatformAdmin\Controllers\XChainSettingsController@edit']);
-            Route::post('/xchain/settings', ['as' => 'platform.admin.xchain.settings', 'uses' => 'Tokenly\PlatformAdmin\Controllers\XChainSettingsController@update']);
-
-            Route::get('/xchain/balances', ['as' => 'platform.admin.xchain.balances.index', 'uses' => 'Tokenly\PlatformAdmin\Controllers\XChainBalancesController@index']);
-            Route::get('/xchain/balances/{id}/edit', ['as' => 'platform.admin.xchain.balances.edit', 'uses' => 'Tokenly\PlatformAdmin\Controllers\XChainBalancesController@edit']);
-            Route::post('/xchain/balances/{id}', ['as' => 'platform.admin.xchain.balances.update', 'uses' => 'Tokenly\PlatformAdmin\Controllers\XChainBalancesController@update']);
-            Route::delete('/xchain/balances/{id}', ['as' => 'platform.admin.xchain.balances.destroy', 'uses' => 'Tokenly\PlatformAdmin\Controllers\XChainBalancesController@destroy']);
-        }
-
         // artisan command
         Route::get('/artisan/command', ['as' => 'platform.admin.artisan.command', 'uses' => 'Tokenly\PlatformAdmin\Controllers\ArtisanCommandController@showForm']);
         Route::post('/artisan/command', ['as' => 'platform.admin.artisan.command', 'uses' => 'Tokenly\PlatformAdmin\Controllers\ArtisanCommandController@runCommand']);
