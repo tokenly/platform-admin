@@ -41,7 +41,8 @@
 
               {{-- inline delete form --}}
               <form onsubmit="return confirm('Are you sure you want to delete this user?')" action="{{ route('platform.admin.user.destroy', ['id' => $model['id']]) }}" method="POST" style="margin-bottom: 0; display: inline;">
-              <input type="hidden" name="_method" value="DELETE">
+                <input type="hidden" name="_method" value="DELETE">
+                {{ csrf_field() }}
                 <button type="submit" class="button-primary">Delete</button>
               </form>
 
