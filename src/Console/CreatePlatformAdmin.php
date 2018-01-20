@@ -72,7 +72,6 @@ class CreatePlatformAdmin extends Command {
     public function handle()
     {
         $user_repository = app('Tokenly\LaravelApiProvider\Contracts\APIUserRepositoryContract');
-        Log::debug("\$user_repository is ".get_class($user_repository));
         $user_vars = [
             'username'        => $this->argument('username'),
             'email'           => $this->argument('email'),
