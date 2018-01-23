@@ -43,7 +43,7 @@ class AuthenticatePlatformAdmin {
             $user = $this->auth->user();
             if (!$user) {
                 // redirect
-                return redirect('/');
+                return redirect(env('PLATFORM_ADMIN_REDIRECT_TO', '/login'));
             }
 
             if ($user instanceof APIPermissionedUserContract) {
