@@ -87,6 +87,15 @@ abstract class ResourceController extends Controller
         ], __FUNCTION__));
     }
 
+    public function show($id)
+    {
+        $resolved_view_prefix = $this->resolveViewPrefix($this->view_prefix);
+        return view($resolved_view_prefix.'.show', $this->modifyViewData([
+            'view_prefix' => $resolved_view_prefix,
+            'model' => $this->requireModelByID($id),
+        ], __FUNCTION__));
+    }
+
     /**
      * Update the specified resource in storage.
      *
@@ -161,6 +170,7 @@ abstract class ResourceController extends Controller
     protected function modifyViewData_create($view_data, $meta=null) { }
     protected function modifyViewData_store($view_data, $meta=null) { }
     protected function modifyViewData_edit($view_data, $meta=null) { }
+    protected function modifyViewData_show($view_data, $meta=null) { }
     protected function modifyViewData_update($view_data, $meta=null) { }
     protected function modifyViewData_delete($view_data, $meta=null) { }
 */
