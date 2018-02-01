@@ -13,6 +13,7 @@
     "require": {
         "php": ">=5.5.0",
         "tokenly/laravel-record-lock": "~1",
+        "tokenly/laravel-event-log": "^3",
         "tokenly/laravel-api-provider": "^3"
     },
     "require-dev": {

@@ -9,7 +9,6 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Log;
-use Tokenly\HmacAuth\Exception\AuthorizationException;
 use Tokenly\LaravelApiProvider\Contracts\APIPermissionedUserContract;
 use Tokenly\LaravelApiProvider\Contracts\APIUserRepositoryContract;
 use Tokenly\LaravelEventLog\Facade\EventLog;

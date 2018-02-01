@@ -6,7 +6,6 @@ use Exception;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Log;
 use Symfony\Component\Console\Input\InputOption;
-use Tokenly\LaravelEventLog\Facade\EventLog;
 use Tokenly\RecordLock\RecordLock;
 
 class MigrateWithLock extends Command {
