@@ -24,6 +24,6 @@ return [
     'console' => [
         'use_background_queue' => env('PLATFORM_CONSOLE_QUEUE_COMMANDS', false),
         'pusher_channel_base' => 'platformadmin',
-        'queue' => 'platform_artisan_command',
+        'queue' => env('PLATFORM_CONSOLE_QUEUE_NAME', 'platform_artisan_command'),
     ],
 ];
