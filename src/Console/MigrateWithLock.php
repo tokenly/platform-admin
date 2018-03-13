@@ -6,9 +6,10 @@ use Exception;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Log;
 use Symfony\Component\Console\Input\InputOption;
+use Tokenly\PlatformAdmin\Console\Contracts\RunsInPlatformAdmin;
 use Tokenly\RecordLock\RecordLock;
 
-class MigrateWithLock extends Command {
+class MigrateWithLock extends Command implements RunsInPlatformAdmin {
 
 
     /**

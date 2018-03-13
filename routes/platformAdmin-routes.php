@@ -18,6 +18,7 @@ if (env('PLATFORM_ADMIN_ENABLED', true)) {
 
         // artisan command
         Route::get('/artisan/command', ['as' => 'platform.admin.artisan.command', 'uses' => 'Tokenly\PlatformAdmin\Controllers\ArtisanCommandController@showForm']);
+        Route::get('/artisan/command/watch/{commandId}', ['as' => 'platform.admin.artisan.command.watch', 'uses' => 'Tokenly\PlatformAdmin\Controllers\ArtisanCommandController@watchCommandResults']);
         Route::post('/artisan/command', ['as' => 'platform.admin.artisan.command', 'uses' => 'Tokenly\PlatformAdmin\Controllers\ArtisanCommandController@runCommand']);
 
 

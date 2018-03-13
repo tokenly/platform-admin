@@ -23,7 +23,17 @@ A platform administration module for Tokenly services using the Laravel applicat
 
 ```ini
 PLATFORM_ADMIN_REDIRECT_TO="/home"
+PLATFORM_CONSOLE_QUEUE_COMMANDS=true
 ```
+
+## Running console commands
+
+A few console commands are available to run from the platform admin.  To enable application-specific commands to be run from the platform admin, implement the `Tokenly\PlatformAdmin\Console\Contracts\RunsInPlatformAdmin` interface in your command class.
+
+The platform admin supports long-running console commands through the use of a queue.  To support long-running console commands, you must:
+1) Enable pusher broadcasting.
+2) Run a background process that processes the `platform_artisan_command` queue.
+3) Set the `PLATFORM_CONSOLE_QUEUE_COMMANDS` environment variable to true.
 
 ## Usage
 
