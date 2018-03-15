@@ -105,13 +105,20 @@ class PusherChannelOutput extends Output
             return false;
         }
 
-        $data = [
-            'msg' => $string,
-            'full' => !!$is_full,
-            'exitStatus' => $this->exit_status,
-            'ts' => $ts,
-        ];
-        $this->pusher_connection->trigger($this->channel_name, 'commandOutput', $data);
+        // split into 9k chunks
+        $string_chunks = str_split($string, 9000);
+        foreach($string_chunks as $offset => $string_chunk) {
+            $is_first = ($offset === 0);
+            $data = [
+                'msg' => $string_chunk,
+                'full' => !!$is_full and $is_first,
+                'exitStatus' => $this->exit_status,
+                'ts' => $ts,
+            ];
+
+            $result = $this->pusher_connection->trigger($this->channel_name, 'commandOutput', $data);
+        }
+
 
         $this->last_msg_time = intval(microtime(true) * 1000);
         $this->next_message = '';
