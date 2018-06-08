@@ -14,7 +14,7 @@
     @include('platformAdmin::includes.user-filter')
 
     <p>
-        <strong># of Users:</strong> {{ number_format(count($models)) }}
+        <strong># of Users:</strong> {{ $pagination['count'] }}
     </p>
     <div class="row">
       <table class="u-full-width">
