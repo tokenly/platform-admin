@@ -1,5 +1,5 @@
     <div class="u-pull-right">
-        {!! Form::model(Illuminate\Support\Facades\Input::all(), ['method' => 'get', 'route' => $pagination['route_prefix'].'.index']) !!}
+        {!! Form::model(Illuminate\Support\Facades\Request::input(), ['method' => 'get', 'route' => $pagination['route_prefix'].'.index']) !!}
         <label for="name" style="display: inline;">Filter By </label>
         {!! Form::text('name', null, ['placeholder' => 'Name']) !!}
         {!! Form::text('username', null, ['placeholder' => 'Username']) !!}
