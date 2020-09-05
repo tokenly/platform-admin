@@ -37,10 +37,10 @@
             <td><code>{{ json_encode($model['privileges'], 192) }}</code></td>
             <td>{{ $model->created_at->format('F j\, Y \a\t g:i A') }}</td>
             <td>
-              <a class="button button-primary" href="{{ route('platform.admin.user.edit', ['id' => $model['id']]) }}">Edit</a>
+              <a class="button button-primary" href="{{ route('platform.admin.user.edit', $model['id']) }}">Edit</a>
 
               {{-- inline delete form --}}
-              <form onsubmit="return confirm('Are you sure you want to delete this user?')" action="{{ route('platform.admin.user.destroy', ['id' => $model['id']]) }}" method="POST" style="margin-bottom: 0; display: inline;">
+              <form onsubmit="return confirm('Are you sure you want to delete this user?')" action="{{ route('platform.admin.user.destroy', $model['id']) }}" method="POST" style="margin-bottom: 0; display: inline;">
                 <input type="hidden" name="_method" value="DELETE">
                 {{ csrf_field() }}
                 <button type="submit" class="button-primary">Delete</button>
@@ -61,4 +61,3 @@
 </div>
 
 @endsection
-
